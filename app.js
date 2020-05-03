@@ -4,7 +4,6 @@ const mongoose=require("mongoose");
 const bodyParser=require("body-parser");
 const {auth, login, logout}=require("./src/controllers/authControllers");
 const {validateTour, validateCatParams, validateReview}=require("./src/middlewares/validate");
-// const validateCat=require("./src/middlewares/validate");
 
 
 
@@ -27,49 +26,54 @@ res.status(200).json({status:"HOME ROUTE OK", data:[]})
 })
 
 //TOUR ROUTE:
-const {readTours, readTour,readTourCat, createTour, deleteTour}=require("./src/controllers/tourControllers");
+const {readTours, readTour,readTourCat, createTour, deleteTour, updateTour}=require("./src/controllers/tourControllers");
 router.route("/categories/:cId/tours")
-.get(auth, validateCatParams, readTourCat) //READ ALL TOURS from 1 CATEGORY: DONE
+.get(auth, validateCatParams, readTourCat) // read all tours from 1 category
 router.route("/tours")
-.get(readTours) //READ ALL TOURS: DONE
-router.route("/tours/:cId").post(auth, validateCatParams, createTour) //CREATE TOUR: DONE
+.get(readTours) //read all tours
+router.route("/tours/:cId").post(auth, validateCatParams, createTour) //create a tour
 router.route("/tours/:tId")
-.get(readTour) //READ SINGLE TOUR: DONE
-.delete(auth, deleteTour) 
+.get(readTour) //read a single tour
+.delete(auth, deleteTour) //delete a tour
+.put(auth, updateTour) //update a tour
+
 
 //REVIEW ROUTE:
 const {createReview,readAllReviews, readReviews,readReview, deleteReview, updateReview}=require("./src/controllers/reviewControllers");
-router.route("/reviews").get(readAllReviews) //READ ALL REVIEWS FROM ALL TOURS
+router.route("/reviews").get(readAllReviews) // read all reviews from all tours
 router.route("/tours/:tId/reviews") 
-.get(auth, validateTour, readReviews) //READ ALL REVIEWS FROM A SINGLE TOUR
-.post(auth, validateTour, createReview) //CREATE REVIEW
-router.get("/tours/:tId/reviews/:rId",validateTour, validateReview, readReview) //READ A SINGLE REVIEW
-router.delete("/reviews/:id", deleteReview)
-router.put("/reviews/:id",updateReview)
+.get(auth, validateTour, readReviews) // read all reviews from a single tour
+.post(auth, validateTour, createReview) // create a review for a tour
+router.get("/tours/:tId/reviews/:rId",validateTour, validateReview, readReview) // read a single review
+
+router.route("/reviews/:rId") 
+.delete(auth, deleteReview) // delete a single review
+.put(auth, updateReview) // update a single review
 
 //CATEGORY ROUTE: DONE.
-const {readCategories, createCategory, deleteCategory, updateCategory}=require("./src/controllers/categoryControllers");
+const {readCategories, readSingleCategory, createCategory, deleteCategory, updateCategory}=require("./src/controllers/categoryControllers");
 router.route("/categories")
-.get(readCategories)
-.post(auth, createCategory)
-router.delete("/categories/:cId",auth, deleteCategory)
-router.put("/categories/:cId",auth, updateCategory)
+.get(readCategories) //read all categories
+.post(auth, createCategory) //create a category
+router.route("/categories/:cId")
+.get(readSingleCategory) //read 1 category
+.delete(auth, deleteCategory) //delete 1 category
+.put(auth, updateCategory) //update 1 category
 
 //USER/ORGANIZER ROUTE:
-const {createUser, readUsers, deleteUser, updateUser}=require("./src/controllers/userControllers");
+const {createUser, readUsers, readSingleUser, deleteUser, updateUser}=require("./src/controllers/userControllers");
 router.route("/users")
-.post(createUser)
+.post(auth,createUser)
 .get(readUsers)
-router.delete("/users/:id", deleteUser)
-router.put("/users/:id",updateUser)
-
+router.route("/users/:uId")
+.get(readSingleUser)
+.delete(auth,deleteUser)
+.put(auth,updateUser)
 
 //AUTHENTICATION/LOGIN/LOGOUT ROUTES:
 router.route("/auth/login")
 .post(login)  
-router.get("/logout", auth, logout);
-
-
+router.get("/auth/logout", auth, logout);
 
 
 

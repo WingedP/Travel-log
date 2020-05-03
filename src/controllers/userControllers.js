@@ -20,10 +20,20 @@ exports.readUsers = async (req, res) => {
     };
 };
 
-exports.deleteUser = async (req, res) => {
-    const { id } = req.params;
+exports.readSingleUser = async (req, res) => {
     try {
-        await User.findByIdAndDelete(id)
+        const {uId} = req.params;
+        const singleUser = await User.findById(uId);
+        res.status(200).json({ status: "successfully show USER!", data: singleUser });
+    } catch (error) {
+        res.status(400).json({ status: "fail to show USER!", message: error.message });
+    };
+};
+
+exports.deleteUser = async (req, res) => {
+    const { uId } = req.params;
+    try {
+        await User.findByIdAndDelete(uId)
         return res.status(204).json({ status: "Successfully deleted USER", data: null })
     }
     catch (er) {
@@ -32,9 +42,9 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.updateUser=async(req,res)=>{
-    const {id}=req.params;
+    const {uId}=req.params;
     try{
-    const user=await User.findByIdAndUpdate(id,{name:req.body.name},{new:true})
+    const user=await User.findByIdAndUpdate(uId,{name:req.body.name},{new:true})
     return res.status(200).json({status:"ok",data:user})
 }   
     catch(er){

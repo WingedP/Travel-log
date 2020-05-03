@@ -1,7 +1,7 @@
 const Category = require("../models/category");
 
 
-//DONE: CREATE CAT: route: {{url}}/categories
+//CREATE CAT: route: {{url}}/categories
 exports.createCategory = async function (req, res) {
     const { name } = req.body;
     try {
@@ -11,7 +11,7 @@ exports.createCategory = async function (req, res) {
         return res.status(400).json({ status: "fail to create CATEGORY", error: err.message })
     }
 }
-//DONE: READ ALL CATS: route: {{url}}/categories
+//READ ALL CATS: route: {{url}}/categories
 exports.readCategories = async (req, res) => {
     try {
         const category = await Category.find();
@@ -20,6 +20,16 @@ exports.readCategories = async (req, res) => {
         res.status(400).json({ status: "fail to show ALL CATEGORIES!", message: error.message });
     };
 };
+//READ SINGLE CATEGORY: route: {{url}}/categories/:cId
+exports.readSingleCategory = async (req, res) => { 
+    const { cId } = req.params;
+    try {   
+        let singleCat= await Category.findById(cId)
+        return res.status(200).json({ status: "Successfully show a single CATEGORY", data: singleCat })
+    }
+    catch (err) {   
+        return res.status(400).json({ status: "failed to show a single CATEGORY", error: err.message })
+}};
 //DONE: DELETE CAT: added cId into params: route: {{url}}/categories/5ea2d10488cef31ed4333499
 exports.deleteCategory = async (req, res) => {
     const { cId } = req.params;

@@ -1,10 +1,9 @@
 
-
-
-
 const Review = require("../models/review");
 const Tour = require("../models/tour");
-//READ ALL REVIEWS FROM ALL TOURS: DONE
+
+
+//READ ALL REVIEWS FROM ALL TOURS: 
 exports.readAllReviews = async function (req, res){
     try{
         const review = await Review.find();
@@ -13,7 +12,8 @@ exports.readAllReviews = async function (req, res){
     }catch(error){res.status(400).json({ status: "fail", message: error.message });
     }
 }
-//READ ALL REVIEWS FROM 1 TOUR: DONE
+
+//READ ALL REVIEWS FROM 1 TOUR: 
 exports.readReviews = async function (req, res){
 try{   
     const reviewNumPerTour = await Review.find({tour:req.tour._id}).countDocuments();
@@ -28,7 +28,8 @@ try{
 }catch(error){res.status(500).json({ status: "fail", message: error.message });
 }
 }
-//READ A SINGLE REVIEW: DONE
+
+//READ A SINGLE REVIEW: 
 exports.readReview = async function (req, res){
 try{
   const singleReview = await Review.findOne({_id: req.params.rId})
@@ -36,7 +37,8 @@ try{
 }catch(error){   res.status(400).json({ status: "fail", message: error.message });
 }
 }
-//CREATE A REVIEW: DONE
+
+//CREATE A REVIEW: 
 exports.createReview = async function (req, res) {
     try {
       const review = await Review.create({
@@ -51,20 +53,29 @@ exports.createReview = async function (req, res) {
     } catch (error) {
       res.status(500).json({ status: "Failed to create REVIEW!", message: error.message });
     }
-  };
+};
 
-
-
-exports.deleteReview = async function (req, res){
-    try{res.status(201).json({ status: "success", data: review })
-}catch(error){res.status(400).json({ status: "fail", message: error.message });
-}
-}
-exports.updateReview = async function (req, res) {
+  exports.deleteReview = async (req, res) => {
+    const { rId } = req.params;
     try {
-      const review = await Review.create({ ...req.body, user: req.user._id })
-      res.status(201).json({ status: "success", data: review })
-    } catch (error) {
-      res.status(400).json({ status: "fail", message: error.message });
+        await Review.findByIdAndDelete(rId)
+        return res.status(204).json({ status: "Successfully deleted REVIEW", data: null })
     }
-  };
+    catch (er) {
+        return res.status(400).json({ status: "failed to delete REVIEW", error: err.message })
+}}
+
+//UPDATE A REVIEW:
+    exports.updateReview = async (req, res) => {
+      const {rId} = req.params;
+      try {
+        
+      const updateReview = await Review.findByIdAndUpdate(rId,{title:req.body.title,content:req.body.content},{new:true})
+      return res.status(201).json({ status: "Successfully updated REVIEW", data: updateReview })
+      }
+      catch (error) {
+      return res.status(400).json({ status: "failed to update REVIEW", error:"???" })
+      }
+}
+
+

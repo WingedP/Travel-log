@@ -3,7 +3,7 @@ const Tour = require("../models/tour");
 const Category = require("../models/category");
 
 
-//DONE: CREATE TOUR: route: {{url}}/tours/cId --- //example:{{url}}/tours/5ea2d090c0a6960f60505554
+// CREATE TOUR: route: {{url}}/tours/cId --- //example:{{url}}/tours/5ea2d090c0a6960f60505554
 exports.createTour = async function (req, res) {
     try {
       const tour = await Tour.create({ ...req.body,
@@ -17,7 +17,7 @@ exports.createTour = async function (req, res) {
       res.status(400).json({ status: "fail to CREATE TOUR", message: err.message });
     };
   };
-//DONE: READ ALL TOURS: route: {{url}}/tours/
+// READ ALL TOURS: route: {{url}}/tours/
 exports.readTours = async function (req, res) {
     try {
       const tours = await Tour.find({});
@@ -27,7 +27,7 @@ exports.readTours = async function (req, res) {
       res.status(400).json({ status: "fail", message: error.message });
     }
   };
-//DONE: READ SINGLE TOUR: route: {{url}}/tours/tId
+// READ SINGLE TOUR: route: {{url}}/tours/tId
 exports.readTour = async (req, res) => {
     try {
       const { tId } = req.params;
@@ -38,7 +38,7 @@ exports.readTour = async (req, res) => {
       res.status(400).json({ status: "fail", message: err.message });
     };
   };
-//DONE: DELETE SINGLE TOUR: route: {{url}}/tours/tId
+// DELETE SINGLE TOUR: route: {{url}}/tours/tId
   exports.deleteTour = async (req, res) => {
     const { tId } = req.params;
     try {
@@ -50,10 +50,20 @@ exports.readTour = async (req, res) => {
     }
 }
 
-//READ ALL TOURS by CATEGORY: //ALL TOURS FROM 1 CAT 
-//added cId into params: 
-//route: {{url}}/categories/cId/tours/ 
-//example:{{url}}/categories/5ea2d10488cef31ed4333499
+// UPDATE SINGLE TOUR: route: {{url}}/tours/tId
+exports.updateTour=async(req,res)=>{
+  const {tId}=req.params;
+  try{
+  const updateTour=await Tour.findByIdAndUpdate(tId,{title:req.body.title,description:req.body.description},{new:true})
+  return res.status(200).json({status:"Successfully updated TOUR",data:updateTour})
+}   
+  catch(er){
+  return res.status(400).json({status:"failed to update TOUR",error:err.message})   
+  }
+}
+
+// READ ALL TOURS FROM 1 CATEGORY 
+//added cId into params: ============ //route: {{url}}/categories/cId/tours/ ============ //example:{{url}}/categories/5ea2d10488cef31ed4333499
 exports.readTourCat = async (req, res) => {
     try {
       const tours = await Tour.find({category:req.cat._id});
