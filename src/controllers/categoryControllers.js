@@ -3,14 +3,17 @@ const Category = require("../models/category");
 
 //CREATE CAT: route: {{url}}/categories
 exports.createCategory = async function (req, res) {
-    const { name } = req.body;
+    const { category } = req.body;
     try {
-        const category = await Category.create({ name });
-        return res.status(201).json({ status: 'Successfully created CATEGORY', data: category })
+        const newcategory = await Category.create({ category });
+        return res.status(201).json({ status: 'Successfully created CATEGORY', data: newcategory })
     } catch (err) {
         return res.status(400).json({ status: "fail to create CATEGORY", error: err.message })
     }
 }
+
+
+
 //READ ALL CATS: route: {{url}}/categories
 exports.readCategories = async (req, res) => {
     try {
@@ -45,7 +48,7 @@ exports.deleteCategory = async (req, res) => {
 exports.updateCategory = async (req, res) => {
     const {cId} = req.params;
     try {
-    const category = await Category.findByIdAndUpdate(cId,{name:req.body.name},{new:true})
+    const category = await Category.findByIdAndUpdate(cId,{category:req.body.category},{new:true})
     return res.status(201).json({ status: "Successfully updated CATEGORY", data: category })
     }
     catch (error) {

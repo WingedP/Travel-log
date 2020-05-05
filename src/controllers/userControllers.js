@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const {updateOne}= require("./factories");
 
 
 exports.createUser = async function (req, res) {
@@ -41,13 +42,15 @@ exports.deleteUser = async (req, res) => {
     }
 }
 
-exports.updateUser=async(req,res)=>{
-    const {uId}=req.params;
-    try{
-    const user=await User.findByIdAndUpdate(uId,{name:req.body.name},{new:true})
-    return res.status(200).json({status:"ok",data:user})
-}   
-    catch(er){
-    return res.status(400).json({status:"failed",error:err.message})   
-    }
-}
+exports.updateUser=updateOne(User)
+
+// exports.updateUser=async(req,res)=>{
+//     const {uId}=req.params;
+//     try{
+//     const user=await User.findByIdAndUpdate(uId,{name:req.body.name},{new:true})
+//     return res.status(200).json({status:"ok",data:user})
+// }   
+//     catch(er){
+//     return res.status(400).json({status:"failed",error:err.message})   
+//     }
+// }

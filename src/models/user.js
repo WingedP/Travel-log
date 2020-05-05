@@ -64,5 +64,11 @@ this.password = await bcrypt.hash(this.password, saltRounds);
 next();
 });
 
+schema.pre("findOneAndUpdate", async function (next){ 
+    if (!this._update.password) return next(); 
+    this._update.password = await bcrypt.hash(this._update.password.toString(), saltRounds);
+    next();
+})
+    
 const User=mongoose.model('User',schema);
 module.exports=User
